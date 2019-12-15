@@ -13,7 +13,7 @@ size <- 1500
 # First create a random normal distribution
 x <- rnorm(size)
 
-# Order the data from smallest to largest providing order statistic?
+x# Order the data from smallest to largest providing order statistic?
 x <- sort(x, decreasing=FALSE)
 
 # Then provide a jitter
@@ -21,10 +21,10 @@ x <- sort(x, decreasing=FALSE)
 
 #y<-y+rnorm(size)*noise
 
-x <- x-min(x)
+#x <- x-min(x)
 
 # Provide X values for raw data plot
-#x <- seq(1:size)/size
+x <- seq(1:size)/size
 
 ## Plot the raw data order statistic and R density plot
 #d <- density(y)
