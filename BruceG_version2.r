@@ -18,14 +18,15 @@ plot(y)
 # Output the g vector
 n<-size
 g=c()
-g[1]<-0.00123456
-prev<-0  # the j-1 variable
-curr<-0   # the j variable
+prev<-x[1]  # the j-1 variable
+curr<-0.1   # the j variable this should be overwritten in loop
+# The loop requires two elements in x and results in a vector of length size-1 or 1499 elements
 for (j in 2:size) {
     curr<-x[j]
-    g[j]=1/(n*(curr-prev))
+    g[j-1]=1/(n*(curr-prev))
     prev<-x[j]
 }
+
 plot(g)
 gsort<-sort(g,decreasing=FALSE)
 plot(gsort)
