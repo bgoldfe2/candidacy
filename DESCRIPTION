@@ -1,0 +1,9 @@
+Package: Candidacy
+Version: 0.1
+Date: 2019-12-17
+Description: Isotonic Regression
+Author: Bruce Goldfeder <bgoldfe2@masonlive.gmu.edu>
+Depends:
+    R (>= 3.5.0)
+Imports:
+    iso
