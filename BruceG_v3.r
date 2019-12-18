@@ -50,9 +50,14 @@ plot(right)
 
 # Via visual inspection find the overlapping elements from 
 # The left and the right and use M1 as the mode
-fhatx1m1<-ufit(g,x=y,lmode=0.0)
+# For the seed 123 the two overlapped values are both 762
+# Convert those to y values as the two modes to check
+# The value of the ordered version of x at 762 is 0.05473653
+fhatx1m1<-ufit(g,x=y[1:1499],lmode=0.05473653)
 fhatx1m1
 plot(fhatx1m1)
+
+# The MLE calculation will need to be made for each possible value of Mode
 #multiply each element
 # mle for x1m1
 mle1<-prod(fhatx1m1(1:1500))
