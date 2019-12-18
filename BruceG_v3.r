@@ -45,9 +45,11 @@ left<-ufit(g,x=y[1:1499],lmode=-3.715927,lc=TRUE)
 plot(left)
 right<-ufit(g,x=y[1:1499],lmode=4.066409,rc=TRUE)
 plot(right)
-right
-left
-x[750]
+#right
+#left
+
+# Via visual inspection find the overlapping elements from 
+# The left and the right and use M1 as the mode
 fhatx1m1<-ufit(g,x=y,lmode=0.0)
 fhatx1m1
 plot(fhatx1m1)
