@@ -41,11 +41,10 @@ plot(h)
 #h[800]
 #h[900]
 
-left<-ufit(g,x=y,lmode=-3.715927,lc=TRUE)
+left<-ufit(g,x=y[1:1499],lmode=-3.715927,lc=TRUE)
 plot(left)
-right<-ufit(g,x=y,lmode=4.066409,rc=TRUE)
+right<-ufit(g,x=y[1:1499],lmode=4.066409,rc=TRUE)
 plot(right)
-plot(left)
 right
 left
 x[750]
