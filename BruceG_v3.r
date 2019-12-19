@@ -4,14 +4,11 @@
 
 # Load the Iso package
 #install.packages("Iso", repos='http://cran.us.r-project.org')
-#install.packages("dplyr", repos='http://cran.us.r-project.org')
-
 library(Iso)
-#library(dplyr)
 
 # Generate pseudo-random numbers in normal distribution
-#set.seed(123)
-set.seed(124)
+set.seed(123)
+
 size<-1500
 x<-rnorm(size)
 y<-sort(x,decreasing=FALSE)
@@ -77,10 +74,11 @@ for (i in lidx:ridx) {
   yhat<-yhat*sign(yhat)  # make all values positive for log-likelihood
   logyhat<-log(yhat)
   like<-sum(logyhat)
-  lelist[i-(lidx-1)]<-like
+  lelist[i]<-like
 }
 
-MLE<-min(lelist)  # This is the most negative log value which is the largest value exp^-min
+MLE<-min(lelist,na.rm=TRUE)  # This is the most negative log value which is the largest value exp^-min
 MLEidx<-which(lelist == MLE)
 MLEval<-y[MLEidx]
 
+MLEval
