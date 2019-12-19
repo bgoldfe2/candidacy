@@ -4,10 +4,14 @@
 
 # Load the Iso package
 #install.packages("Iso", repos='http://cran.us.r-project.org')
+#install.packages("dplyr", repos='http://cran.us.r-project.org')
+
 library(Iso)
+#library(dplyr)
 
 # Generate pseudo-random numbers in normal distribution
-set.seed(123)
+#set.seed(123)
+set.seed(124)
 size<-1500
 x<-rnorm(size)
 y<-sort(x,decreasing=FALSE)
@@ -33,7 +37,7 @@ plot(gsort)
 
 # Run the pool adjacent violators algorithm
 h<-pava(g)
-plot(h)
+plot(y[1:1499],h)
 
 # This section depicts the manual discovery of the mode using the left-most point of the right most bar of points
 #h[1500]
@@ -41,9 +45,13 @@ plot(h)
 #h[800]
 #h[900]
 
-left<-ufit(g,x=y[1:1499],lmode=-3.715927,lc=TRUE)
+# Find the min and max for x the original normal distribution
+leftmd<-min(x)
+rightmd<-max(x)
+
+left<-ufit(g,x=y[1:1499],lmode=leftmd,lc=TRUE)
 plot(left)
-right<-ufit(g,x=y[1:1499],lmode=4.066409,rc=TRUE)
+right<-ufit(g,x=y[1:1499],lmode=rightmd,rc=TRUE)
 plot(right)
 #right
 #left
@@ -56,6 +64,12 @@ plot(right)
 fhatx1m1<-ufit(g,x=y[1:1499],lmode=0.05473653)
 fhatx1m1
 plot(fhatx1m1)
+
+# Remove spike and come in from left and right
+fhatx1m1$y[762]
+z<-rep(TRUE,1499)
+z[762]<-FALSE
+fhatnospk<-fhatx1m1$y[z]
 
 # The MLE calculation will need to be made for each possible value of Mode
 #multiply each element
