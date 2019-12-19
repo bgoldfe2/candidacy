@@ -37,7 +37,7 @@ plot(gsort)
 
 # Run the pool adjacent violators algorithm
 h<-pava(g)
-plot(y[1:1499],h)
+plot(y[1:1499],h)  # I seem to not use this to solve for MLE???
 
 # This section depicts the manual discovery of the mode using the left-most point of the right most bar of points
 #h[1500]
@@ -49,6 +49,8 @@ plot(y[1:1499],h)
 leftmd<-min(x)
 rightmd<-max(x)
 
+# Solve using ufit with g the raw density and y the ordered normal distribution
+# to find the "interval" where the overlap we need to determine MLE
 left<-ufit(g,x=y[1:1499],lmode=leftmd,lc=TRUE)
 plot(left)
 right<-ufit(g,x=y[1:1499],lmode=rightmd,rc=TRUE)
@@ -58,29 +60,27 @@ plot(right)
 
 # Via visual inspection find the overlapping elements from 
 # The left and the right and use M1 as the mode
-# For the seed 123 the two overlapped values are both 762
-# Convert those to y values as the two modes to check
-# The value of the ordered version of x at 762 is 0.05473653
-fhatx1m1<-ufit(g,x=y[1:1499],lmode=0.05473653)
-fhatx1m1
-plot(fhatx1m1)
+# This is automated in code below
+# Convert those to y values as the two modes to find MLE
 
-# Remove spike and come in from left and right
-fhatx1m1$y[762]
-z<-rep(TRUE,1499)
-z[762]<-FALSE
-fhatnospk<-fhatx1m1$y[z]
+# Find the last element of the left entering value (top left of graph)
+# Find the first element of the right leaving value (top right of graph)
+lval<-left$y[1]
+lidx<-length(which(left$y == lval))
+rval<-right$y[1499]
+ridx<-1499-length(which(right$y == rval))
 
-# The MLE calculation will need to be made for each possible value of Mode
-#multiply each element
-# mle for x1m1
-mle1<-prod(fhatx1m1(1:1500))
-mle1<-prod(fhatx1m1[1:1500])
-mle1<-prod(fhatx1m1$y)
-mle1
-# get 40 or so mle's and pick the least negative one
-stuff<-history
-stuff
-history
-save.image("C:\\Users\\bruce\\dev\\candidacy\\dec14edweg.RData")
-plot(h)
+lelist<-c()
+for (i in lidx:ridx) {
+  fhatx1m1<-ufit(g,x=y[1:1499],lmode=y[i])
+  yhat<-fhatx1m1$y
+  yhat<-yhat*sign(yhat)  # make all values positive for log-likelihood
+  logyhat<-log(yhat)
+  like<-sum(logyhat)
+  lelist[i-(lidx-1)]<-like
+}
+
+MLE<-min(lelist)  # This is the most negative log value which is the largest value exp^-min
+MLEidx<-which(lelist == MLE)
+MLEval<-y[MLEidx]
+
