@@ -88,7 +88,7 @@ ridx<-match(c(rval),pavright)
 lelist<-c()
 yhatmx<-matrix(NA, nrow=lidx-ridx+1, ncol=size-1)
 cnt<-0
-for (i in lidx:ridx) {
+for (i in ridx:lidx) {
   cnt<-cnt+1
   fhatx1m1<-ufit(g,x=y[1:size-1],lmode=y[i])
   yhat<-fhatx1m1$y
@@ -103,8 +103,17 @@ MLE<-min(lelist,na.rm=TRUE)  # This is the most negative log value which is the 
 MLEidx<-which(lelist == MLE)
 MLEval<-y[MLEidx]
 
+# Plot the fhats finding the min and max for the y range setting
+yhatmax<-max(as.numeric(unlist(yhatmx)))
+ymax<-yhatmax*1.01  # make it 1% higher than max value
+
+for (k in 1:(lidx-ridx+1)) {
+  plot(y[1:size-1],yhatmx[k,],xlim=c(leftmd,rightmd),ylim=c(0.0,ymax))
+}
+
 # For log-likelihood the lowest negative value will generate the least negative number
 plot(lelist[lidx:ridx])
+
 
 MLEval
 MLEidx
