@@ -40,7 +40,7 @@ plot(x[1:size-1],g,main="Raw Density",
 leftmd<-min(x)
 rightmd<-max(x)
 
-# Solve using ufit with g the raw density and y the ordered normal distribution
+# Solve using ufit with g the raw density and y the ordered normal distribution and then running the PAVA function
 # to find the "interval" of overlap coming in from the left and the right (increasing and decreasing) pava
 
 right<-ufit(g,x=y[1:size-1],lmode=rightmd,rc=TRUE)
@@ -50,7 +50,8 @@ left<-ufit(g,x=y[1:size-1],lmode=leftmd,lc=TRUE)
 pavleft<-pava(left$y,decreasing=TRUE)
 
 # Plot the Overlap in single graph
-plot(y[1:size-1],pavright,type="o",col="green",main="Overlap Analysis using PAVA from right and left")
+plot(y[1:size-1],pavright,type="o",col="green",main="Overlap Analysis using PAVA from right and left",
+     xlab="Y", ylab="PAVA of UFIT")
 lines(y[1:size-1],pavleft,bg="blue",type="o",col="blue")
 legend(-3, .00011, legend=c("Right PAVA", "Left PAVA"),
        col=c("green", "blue"), lty=1:2, cex=0.8)
@@ -89,13 +90,15 @@ MLEidx<-which(lelist == MLE)
 MLEval<-y[MLEidx]
 
 # Plot the fhats finding the min and max for the y range setting
+# Find the range for independent axis
 yhatmax<-max(as.numeric(unlist(yhatmx)))
 ymax<-yhatmax*1.01  # make it 1% higher than max value
 
-par(mfrow=c(3,2))
+# Graph 3 rows by 2 columns per page
+par(mfrow=c(4,2))
 for (k in 1:(lidx-ridx+1)) {
   plot(y[1:size-1],yhatmx[k,],xlim=c(leftmd,rightmd),ylim=c(0.0,ymax),main=paste("PDF for Mode at index",ridx+k-1), 
-       xlab="X", ylab="Density")
+       xlab="Y", ylab="Density")
 }
 
 # For log-likelihood the lowest negative value will generate the least negative number
