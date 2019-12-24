@@ -1,5 +1,6 @@
 # Bruce Goldfeder
 # PhD Candidacy Exam
+# Dec 24, 2019
 # Visualization Practicum - Dr. Ed Wegman
 
 # Load the Iso package
@@ -91,15 +92,19 @@ MLEval<-y[MLEidx]
 yhatmax<-max(as.numeric(unlist(yhatmx)))
 ymax<-yhatmax*1.01  # make it 1% higher than max value
 
+par(mfrow=c(3,2))
 for (k in 1:(lidx-ridx+1)) {
   plot(y[1:size-1],yhatmx[k,],xlim=c(leftmd,rightmd),ylim=c(0.0,ymax),main=paste("PDF for Mode at index",ridx+k-1), 
        xlab="X", ylab="Density")
 }
 
 # For log-likelihood the lowest negative value will generate the least negative number
+par(mfrow=c(1,1))
 plot(y[lidx:ridx],lelist[lidx:ridx],main="FHat Log-Likelihoods", sub="Smallest value will generate the least negative number",
      xlab="X", ylab="Likelihood of FHat")
 
-
-MLEval
-MLEidx
+# Output the MLE and the index in Y for the MLE
+# MLEval
+print(paste("The MLE value is",MLEval),quote=FALSE)
+#MLEidx
+print(paste("The index in the Y vector is",MLEidx),quote=FALSE)
