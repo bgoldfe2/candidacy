@@ -1,77 +1,59 @@
 # Bruce Goldfeder
 # PhD Candidacy Exam
-# Visualization - Dr. Ed Wegman
+# Visualization Practicum - Dr. Ed Wegman
 
 # Load the Iso package
 #install.packages("Iso", repos='http://cran.us.r-project.org')
-#install.packages('dplyr')
 
 library(Iso)
-#library(dplyr)
 
 # Generate pseudo-random numbers in normal distribution
-#set.seed(123)
 set.seed(144)
 
 size<-1500
 x<-rnorm(size)
 y<-sort(x,decreasing=FALSE)
-hist(y)
-plot(y)
 
-# Run the raw density function on x
-# Output the g vector
+# Plot the histogram of X and the plot of ordered values Y
+hist(x)
+plot(y,main="Plot for Ordered Values Y")
+
+# Run the Raw Density function on x
+# Output the g vector from the loop
 n<-size
 g=c()
-prev<-y[1]  # the j-1 variable
-curr<-0.1   # the j variable this should be overwritten in loop
+
+# Calculate the raw density using the adjusted formula (divide by y[j] to eliminate spikes)
 # The loop requires two elements in x and results in a vector of length size-1 or 1499 elements
 for (j in 2:size) {
-    curr<-y[j]
-    #g[j-1]=1/(n*(curr-prev))
-    g[j-1]<-1/n*((y[j]-y[j-1])/abs(y[j]))
-    prev<-y[j]
+    #g[j-1]=1/(n*(curr-prev)) # original formula
+    g[j-1]<-1/n*((y[j]-y[j-1])/abs(y[j]))  # normalized to reduce spikes
 }
 
-plot(x[1:size-1],g)
-#gsort<-sort(g,decreasing=FALSE)
-#plot(x[1:size-1],gsort)
+# Plot the generated Raw Density
+plot(x[1:size-1],g,main="Raw Density", 
+     xlab="X", ylab="Density")
 
-# Run the pool adjacent violators algorithm
-
-h<-pava(g,decreasing = FALSE)
-plot(y[1:size-1],h)
-
-h2<-pava(g,decreasing = TRUE)  # stepfun gives the edge numbers
-plot(y[1:size-1],h2)
-
-#h2<-pava(g,decreasing=TRUE)
-#plot(y[1:size-1],h2,pch=21,bg="blue")
-#lines(y[1:size-1],h2,pch=21,bg="blue"
-
-# Guessing on this one
-#hleft<-ufit(h,x=y[size-1],lmode=leftmd,lc=TRUE)
-#plot(hleft)
 
 # Find the min and max for x the original normal distribution
 leftmd<-min(x)
 rightmd<-max(x)
 
 # Solve using ufit with g the raw density and y the ordered normal distribution
-# to find the "interval" where the overlap we need to determine MLE
+# to find the "interval" of overlap coming in from the left and the right (increasing and decreasing) pava
 
 right<-ufit(g,x=y[1:size-1],lmode=rightmd,rc=TRUE)
 pavright<-pava(right$y)
-plot(y[1:size-1],pavright)
-lines(right)
+
 left<-ufit(g,x=y[1:size-1],lmode=leftmd,lc=TRUE)
 pavleft<-pava(left$y,decreasing=TRUE)
-lines(y[1:size-1],pavleft,bg="blue")
-lines(left)
 
-# Find the last element of the left entering value (top left of graph)
-# Find the first element of the right leaving value (top right of graph)
-# lval<-left$y[1] # This implementation was a bit naive and did not take into account minor roundoff errors
+# Plot the Overlap in single graph
+plot(y[1:size-1],pavright,type="o",col="green",main="Overlap Analysis using PAVA from right and left")
+lines(y[1:size-1],pavleft,bg="blue",type="o",col="blue")
+legend(-3, .00011, legend=c("Right PAVA", "Left PAVA"),
+       col=c("green", "blue"), lty=1:2, cex=0.8)
+
 
 # Finds the most common value in the large set of values coming in from the left (eliminates roundoff errors)
 leftin<-sort(table(pavleft[1:800]),decreasing=TRUE)[1]
@@ -85,6 +67,8 @@ rval<-names(rightin)[1]
 # Finds the first index of the entry line coming in from the right
 ridx<-match(c(rval),pavright)
 
+# Using the ridx and lidx index values loop through the overlap to find Log-Likelihoods
+# When done find the Max Likelihood
 lelist<-c()
 yhatmx<-matrix(NA, nrow=lidx-ridx+1, ncol=size-1)
 cnt<-0
@@ -108,11 +92,13 @@ yhatmax<-max(as.numeric(unlist(yhatmx)))
 ymax<-yhatmax*1.01  # make it 1% higher than max value
 
 for (k in 1:(lidx-ridx+1)) {
-  plot(y[1:size-1],yhatmx[k,],xlim=c(leftmd,rightmd),ylim=c(0.0,ymax))
+  plot(y[1:size-1],yhatmx[k,],xlim=c(leftmd,rightmd),ylim=c(0.0,ymax),main=paste("PDF for Mode at index",ridx+k-1), 
+       xlab="X", ylab="Density")
 }
 
 # For log-likelihood the lowest negative value will generate the least negative number
-plot(lelist[lidx:ridx])
+plot(y[lidx:ridx],lelist[lidx:ridx],main="FHat Log-Likelihoods", sub="Smallest value will generate the least negative number",
+     xlab="X", ylab="Likelihood of FHat")
 
 
 MLEval
