@@ -120,10 +120,6 @@ plot(y[1:a_len],a_chop,xlim=c(leftmd,rightmd),ylim=c(0.0,cutoff),main=paste("PDF
 plot(y[1:a_len],a_chop,xlim=c(-0.1,0.1),ylim=c(0.0,cutoff),main=paste("PDF for Mode at index",ridx+k-1), 
      xlab="Y", ylab="Density", type='b')
 
-
-# Need to remove the high points from 797 and plot
-
-
 # For log-likelihood the lowest negative value will generate the least negative number
 par(mfrow=c(1,1))
 plot(y[lidx:ridx],lelist[lidx:ridx],main="FHat Log-Likelihoods", sub="Smallest value will generate the least negative number",
