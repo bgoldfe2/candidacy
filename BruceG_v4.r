@@ -101,6 +101,29 @@ for (k in 1:(lidx-ridx+1)) {
        xlab="Y", ylab="Density")
 }
 
+# Remove the top outliers and make sure graph is isotonic up and down on each side of mode
+k=MLEidx-ridx+1
+a<-yhatmx[k,]
+top5<-tail(sort(a),50)
+
+# Analysis of output give a high point at about .00025 I will remove points greater
+cutoff <- 0.00025
+a_chop <- a[a<cutoff]
+
+a_len<-length(a_chop)
+
+# Plot full x and reduced x to central area of interest near mode
+par(mfrow=c(1,1))
+plot(y[1:a_len],a_chop,xlim=c(leftmd,rightmd),ylim=c(0.0,cutoff),main=paste("PDF for Mode at index",ridx+k-1), 
+     xlab="Y", ylab="Density", type='b')
+
+plot(y[1:a_len],a_chop,xlim=c(-0.1,0.1),ylim=c(0.0,cutoff),main=paste("PDF for Mode at index",ridx+k-1), 
+     xlab="Y", ylab="Density", type='b')
+
+
+# Need to remove the high points from 797 and plot
+
+
 # For log-likelihood the lowest negative value will generate the least negative number
 par(mfrow=c(1,1))
 plot(y[lidx:ridx],lelist[lidx:ridx],main="FHat Log-Likelihoods", sub="Smallest value will generate the least negative number",
