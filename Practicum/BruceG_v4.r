@@ -107,7 +107,8 @@ a<-yhatmx[k,]
 top5<-tail(sort(a),50)
 
 # Analysis of output give a high point at about .00025 I will remove points greater
-cutoff <- 0.00025
+#cutoff <- 0.00025
+cutoff <- 0.00001
 a_chop <- a[a<cutoff]
 
 a_len<-length(a_chop)
@@ -117,7 +118,10 @@ par(mfrow=c(1,1))
 plot(y[1:a_len],a_chop,xlim=c(leftmd,rightmd),ylim=c(0.0,cutoff),main=paste("PDF for Mode at index",ridx+k-1), 
      xlab="Y", ylab="Density", type='b')
 
-plot(y[1:a_len],a_chop,xlim=c(-0.1,0.1),ylim=c(0.0,cutoff),main=paste("PDF for Mode at index",ridx+k-1), 
+plot(y[1:a_len],a_chop,xlim=c(-0.5,0.5),ylim=c(0.0,cutoff),main=paste("PDF for Mode at index",ridx+k-1), 
+     xlab="Y", ylab="Density", type='b')
+
+plot(y[1:a_len],a_chop,ylim=c(0.0,cutoff),main=paste("PDF for Mode at index",ridx+k-1), 
      xlab="Y", ylab="Density", type='b')
 
 # For log-likelihood the lowest negative value will generate the least negative number
